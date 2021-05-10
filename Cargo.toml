@@ -1,7 +1,12 @@
 [package]
 name = "dogehouse-api"
-description = "API Wrapper for Dogegarden's API v1."
+description = "API Wrapper for Dogegarden's API v1"
 authors = [ "Tom van Dijk <18gatenmaker6@gmail.com>" ]
+homepage = "https://api.dogegarden.net"
+documentation = "https://docs.rs/dogehouse_api/"
+readme = "README.md"
+repository = "https://github.com/dtomvan/dogehouse-api/"
+license = "Unlicense"
 version = "0.1.0"
 edition = "2018"
 
