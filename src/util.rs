@@ -2,11 +2,17 @@
 #[doc(hidden)]
 macro_rules! request {
     ($url:ident) => {{
-        let res = reqwest::get($url)
+        use std::convert::TryFrom;
+
+        let https = hyper_tls::HttpsConnector::new();
+        let client = hyper::client::Client::builder()
+            .build::<_, hyper::Body>(https);
+        let ok_code = hyper::StatusCode::from_u16(200).unwrap();
+        let res = client.get(hyper::Uri::try_from($url).unwrap())
             .await
-            .or_else(|_| return Err(crate::ErrorType::NoHTTP))?;
+            .or_else(|e| {println!("{}", e); Err(crate::ErrorType::NoHTTP("Could not send request"))})?;
         let status = res.status();
-        if let reqwest::StatusCode::OK = status {
+        if ok_code == status {
             Ok(res)
         } else {
             Err(crate::ErrorType::NotFound(status.as_u16()))
@@ -38,8 +44,12 @@ macro_rules! endpoint {
         }
     };
     ($res:ident;$scheme:ty) => {{
-        let text = $res.text().await.or_else(|_| Err(crate::ErrorType::NoHTTP))?;
-        serde_json::from_str::<$scheme>(text.as_str())
+        let body = $res.into_body();
+        let bytes = hyper::body::to_bytes(body)
+            .await
+            .or_else(|_| Err(crate::ErrorType::NoHTTP("Could not convert response into bytes.")))?;
+        serde_json::from_str::<$scheme>(std::str::from_utf8(&bytes)
+            .or_else(|_| Err(crate::ErrorType::NoHTTP("Could not read bytes from server.")))?)
             .or_else(|e| Err(crate::ErrorType::ParseError(e)))
     }};
 }

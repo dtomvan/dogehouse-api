@@ -38,7 +38,7 @@ pub enum ErrorType {
     /// Contains serde_json's error.
     ParseError(serde_json::Error),
     /// Constructed when for some reason reqwest's get() doesn't return an Ok() value.
-    NoHTTP,
+    NoHTTP(&'static str),
 }
 
 // This is free and unencumbered software released into the public domain.
