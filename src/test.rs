@@ -9,3 +9,8 @@ async fn statistics() {
 async fn popular_rooms() {
     crate::endpoints::PopularRooms::send().await.unwrap();
 }
+
+#[tokio::test]
+async fn bots() {
+    crate::endpoints::Bots::send().await.unwrap();
+}

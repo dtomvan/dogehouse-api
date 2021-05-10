@@ -1,6 +1,8 @@
+//! # Dogehouse-api
 #![feature(format_args_capture)]
 pub mod endpoints;
 mod util;
+pub mod queries;
 #[cfg(test)]
 mod test;
 

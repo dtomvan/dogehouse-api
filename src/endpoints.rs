@@ -22,7 +22,6 @@ crate::endpoint!(
 );
 #[derive(Deserialize, PartialEq)]
 #[serde(rename_all = "camelCase")]
-#[allow(dead_code)]
 pub struct StatisticsScheme {
     total_rooms: u64,
     total_scheduled_rooms: u64,
@@ -38,9 +37,9 @@ crate::endpoint!(
     PopularRoomsScheme,
     "/popularRooms"
 );
+
 #[derive(Deserialize, PartialEq)]
 #[serde(rename_all = "camelCase")]
-#[allow(dead_code)]
 pub struct PopularRoomsScheme {
     rooms: Vec<RoomScheme>,
     #[serde(flatten)]
@@ -50,7 +49,6 @@ pub struct PopularRoomsScheme {
 
 #[derive(Deserialize, PartialEq)]
 #[serde(rename_all = "camelCase")]
-#[allow(dead_code)]
 pub struct RoomScheme {
     id: String,
     name: String,
@@ -73,10 +71,37 @@ pub struct RoomScheme {
 
 #[derive(Deserialize, PartialEq)]
 #[serde(rename_all = "camelCase")]
-#[allow(dead_code)]
 pub struct PersonScheme {
     id: String,
     display_name: String,
     num_followers: u64,
     avatar_url: String,
+}
+
+crate::endpoint!(
+    #[doc = "This defines the binding for the /bots endpoint in the API."]
+    Bots,
+    Vec<BotScheme>,
+    "/bots"
+);
+
+#[derive(Deserialize, PartialEq)]
+#[serde(rename_all = "camelCase")]
+pub struct BotScheme {
+    #[serde(rename = "_id")]
+    id: String,
+    #[serde(rename = "socket_id")]
+    socket_id: String,
+    bot: BotInner,
+    // This isn't even the same as other rooms
+    // Or in the docs
+    room: Map<String, Value>,
+}
+
+#[derive(Deserialize, PartialEq)]
+#[serde(rename_all = "camelCase")]
+pub struct BotInner {
+    uuid: String,
+    username: String,
+    avatar: String,
 }
