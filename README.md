@@ -1,4 +1,5 @@
 # dogehouse-api
+BEWARE: dogehouse is as dead as it can be, not in development anymore.
 
 ## Dogehouse-api
 This is a work-in-progress crate to interact with the dogehouse API.
